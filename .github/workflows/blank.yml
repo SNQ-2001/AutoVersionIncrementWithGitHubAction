@@ -30,10 +30,10 @@ jobs:
           jq -r '.title')
           echo $PR_TITLE
     
-      # - name: Check if the "リリース" ラベルが付いている
-      #   id: check_label
-      #   run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
-      #   if: github.event_name == 'pull_request' && steps.check_label.outputs.has_label == 'リリース'
+      - name: リリースラベルが付いているか判定
+        id: check_release_label
+        run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
+        if: github.event_name == 'pull_request' && steps.check_release_label.outputs.has_label == 'リリース'
 
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
