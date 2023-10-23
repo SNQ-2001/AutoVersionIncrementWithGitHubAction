@@ -25,10 +25,9 @@ jobs:
       - name: Get PR Title
         id: pr_title
         run: |
-          PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
+          PR_TITLE=$("https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
-          echo "PR Title: $PR_TITLE"
+          echo "$PR_TITLE"
         env:
           PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
     
