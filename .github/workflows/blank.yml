@@ -46,12 +46,12 @@ jobs:
 
       - name: 出力用
         run: |
-          echo $HAS_RELEASE_LABEL
-          echo $PR_TITLE
+          echo ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
+          echo ${{ steps.pr_title.outputs.PR_TITLE }}
 
-    env: # ここで他のステップに共有できるようになるかも？
-      HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
-      PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
+    # env: # ここで他のステップに共有できるようになるかも？
+    #   HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
+    #   PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
 
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
