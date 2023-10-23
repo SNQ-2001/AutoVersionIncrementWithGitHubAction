@@ -19,10 +19,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    env: # ここで他のステップに共有できるようになるかも？
-      HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
-      PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
-
     steps:
       - name: リポジトリの内容を取得？
         uses: actions/checkout@v2
@@ -52,6 +48,10 @@ jobs:
         run: |
           echo $HAS_RELEASE_LABEL
           echo $PR_TITLE
+
+    env: # ここで他のステップに共有できるようになるかも？
+      HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
+      PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
 
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
