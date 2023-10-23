@@ -66,10 +66,28 @@ jobs:
           echo $MARKETING_VERSION
 
           if [[ $PR_TITLE =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            PR_VERSION_NEW=(${PR_TITLE//./ })
-            MARKETING_VERSION_NEW=(${MARKETING_VERSION//./ })
-            echo $PR_VERSION_NEW
-            echo $MARKETING_VERSION_NEW
+            # バージョン番号をドットで分割
+            IFS='.' read -ra pr_version_parts <<< "$PR_TITLE"
+            IFS='.' read -ra proj_version_parts <<< "$PR_TITLE"
+
+            # バージョンの各コンポーネントを整数に変換
+            pr_major_version=${pr_version_parts[0]}
+            pr_minor_version=${pr_version_parts[1]}
+            pr_patch_version=${pr_version_parts[2]}
+
+            proj_major_version=${proj_version_parts[0]}
+            proj_minor_version=${proj_version_parts[1]}
+            proj_patch_version=${proj_version_parts[2]}
+
+            # 各コンポーネントの整数値を出力
+            echo "PR Major Version: $pr_major_version"
+            echo "PR Minor Version: $pr_minor_version"
+            echo "PR Patch Version: $pr_patch_version"
+
+            echo "Proj Major Version: $proj_major_version"
+            echo "Proj Minor Version: $proj_minor_version"
+            echo "Proj Patch Version: $proj_patch_version"
+            
           else
             echo "バージョン番号がセマンティックバージョニング形式ではありません"
           fi
