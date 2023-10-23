@@ -50,7 +50,6 @@ jobs:
         id: proj_marketing_version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          cat ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
           PROJ_MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj)
           echo "proj_marketing_version=$PROJ_MARKETING_VERSION" >> $GITHUB_OUTPUT
 
@@ -93,6 +92,7 @@ jobs:
       - name: バージョンアップ
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }} && ${{ steps.version_comparison.outputs.has_app_update == 'true' }}
         run: |
+          cat ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
           NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
           sed -i -n '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" ../${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
 
