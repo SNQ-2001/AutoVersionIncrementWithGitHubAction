@@ -36,66 +36,57 @@ jobs:
           fi
           echo "has_release_label=$HAS_RELEASE_LABEL" >> $GITHUB_OUTPUT
 
-      - name: PRのタイトルを取得
-        id: pr_title
+      - name: PRタイトルのバージョンを取得
+        id: pr_title_version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          PR_TITLE_VERSION=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
           echo 
-          echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
+          echo "pr_title_version=$PR_TITLE_VERSION" >> $GITHUB_OUTPUT
 
       - name: project.pbxprojからMARKETING_VERSIONを取得
-        id: version
+        id: proj_marketing_version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.APP_NAME }}.xcodeproj/project.pbxproj)
-          echo "marketing_version=$MARKETING_VERSION" >> $GITHUB_OUTPUT
+          PROJ_MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.APP_NAME }}.xcodeproj/project.pbxproj)
+          echo "proj_marketing_version=$PROJ_MARKETING_VERSION" >> $GITHUB_OUTPUT
 
       - name: PRタイトルのバージョンとMARKETING_VERSIONを比較
-        id: comparison
+        id: version_comparison
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          PR_TITLE=$(echo ${{ steps.pr_title.outputs.pr_title }})
-          MARKETING_VERSION=$(echo ${{ steps.version.outputs.marketing_version }})
+          PR_TITLE_VERSION=$(echo ${{ steps.pr_title_version.outputs.pr_title_version }})
+          PROJ_MARKETING_VERSION=$(echo ${{ steps.proj_marketing_version.outputs.proj_marketing_version }})
 
-          if [[ $PR_TITLE =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            # バージョン番号をドットで分割
-            IFS='.' read -ra pr_version_parts <<< "$PR_TITLE"
-            IFS='.' read -ra proj_version_parts <<< "$MARKETING_VERSION"
+          if [[ $PR_TITLE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $PROJ_MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            IFS='.' read -ra pr_title_version_parts <<< "$PR_TITLE_VERSION"
+            IFS='.' read -ra proj_marketing_version_parts <<< "$PROJ_MARKETING_VERSION"
 
-            # バージョンの各コンポーネントを整数に変換
-            pr_major_version=${pr_version_parts[0]}
-            pr_minor_version=${pr_version_parts[1]}
-            pr_patch_version=${pr_version_parts[2]}
+            # pr_title_version
+            pr_title_major_version=${pr_title_version_parts[0]}
+            pr_title_minor_version=${pr_title_version_parts[1]}
+            pr_title_patch_version=${pr_title_version_parts[2]}
 
-            proj_major_version=${proj_version_parts[0]}
-            proj_minor_version=${proj_version_parts[1]}
-            proj_patch_version=${proj_version_parts[2]}
+            # proj_marketing_version
+            proj_marketing_major_version=${proj_marketing_version_parts[0]}
+            proj_marketing_minor_version=${proj_marketing_version_parts[1]}
+            proj_marketing_patch_version=${proj_marketing_version_parts[2]}
 
-            # 各コンポーネントの整数値を出力
-            echo "PR Major Version: $pr_major_version"
-            echo "PR Minor Version: $pr_minor_version"
-            echo "PR Patch Version: $pr_patch_version"
-
-            echo "Proj Major Version: $proj_major_version"
-            echo "Proj Minor Version: $proj_minor_version"
-            echo "Proj Patch Version: $proj_patch_version"
-
-            if [ $pr_major_version -gt $proj_major_version ] ||
-               ([ $pr_major_version -eq $proj_major_version ] &&
-                [ $pr_minor_version -gt $proj_minor_version ]) ||
-               ([ $pr_major_version -eq $proj_major_version ] &&
-                [ $pr_minor_version -eq $proj_minor_version ] &&
-                [ $pr_patch_version -gt $proj_patch_version ]); then
-              echo "PR_TITLE は MARKETING_VERSION よりも大きいバージョンです"
-            elif [ $pr_major_version -eq $proj_major_version ] &&
-                 [ $pr_minor_version -eq $proj_minor_version ] &&
-                 [ $pr_patch_version -eq $proj_patch_version ]; then
-              echo "PR_TITLE は MARKETING_VERSION と同じバージョンです"
+            if [ $pr_title_major_version -gt $proj_marketing_major_version ] ||
+               ([ $pr_title_major_version -eq $proj_marketing_major_version ] &&
+                [ $pr_title_minor_version -gt $proj_marketing_minor_version ]) ||
+               ([ $pr_title_major_version -eq $proj_marketing_major_version ] &&
+                [ $pr_title_minor_version -eq $proj_marketing_minor_version ] &&
+                [ $pr_title_patch_version -gt $proj_marketing_patch_version ]); then
+              echo "PR_TITLE_VERSION は MARKETING_VERSION よりも大きいバージョンです"
+            elif [ $pr_title_major_version -eq $proj_marketing_major_version ] &&
+                 [ $pr_title_minor_version -eq $proj_marketing_minor_version ] &&
+                 [ $pr_title_patch_version -eq $proj_marketing_patch_version ]; then
+              echo "PR_TITLE_VERSION は MARKETING_VERSION と同じバージョンです"
             else
-              echo "PR_TITLE は MARKETING_VERSION よりも小さいバージョンです"
+              echo "PR_TITLE_VERSION は MARKETING_VERSION よりも小さいバージョンです"
               exit 1
             fi
             
@@ -107,6 +98,6 @@ jobs:
       - name: 出力用
         run: |
           echo ${{ steps.check_release_label.outputs.has_release_label }}
-          echo ${{ steps.pr_title.outputs.pr_title }}
-          echo ${{ steps.version.outputs.marketing_version }}
+          echo ${{ steps.pr_title_version.outputs.pr_title_version }}
+          echo ${{ steps.proj_marketing_version.outputs.marketing_version }}
           echo ${{ env.APP_NAME }}
