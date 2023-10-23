@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      APP_NAME: AutoVersionIncrementWithGitHubAction
+      PROJ_NAME: AutoVersionIncrementWithGitHubAction
 
     steps:
       - name: リポジトリの内容を取得？
@@ -50,7 +50,7 @@ jobs:
         id: proj_marketing_version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          PROJ_MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.APP_NAME }}.xcodeproj/project.pbxproj)
+          PROJ_MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj)
           echo "proj_marketing_version=$PROJ_MARKETING_VERSION" >> $GITHUB_OUTPUT
 
       - name: PRタイトルのバージョンとMARKETING_VERSIONを比較
@@ -89,9 +89,9 @@ jobs:
             exit 1
           fi
 
-      - name: 出力用
+      - name: デバッグ用
         run: |
-          echo "アプリ名: ${{ env.APP_NAME }}"
+          echo "プロジェクト名: ${{ env.PROJ_NAME }}"
           echo "リリースラベル: ${{ steps.check_release_label.outputs.has_release_label }}"
           echo "PRタイトルバージョン: ${{ steps.pr_title_version.outputs.pr_title_version }}"
           echo "現在のバージョン: ${{ steps.proj_marketing_version.outputs.proj_marketing_version }}"
