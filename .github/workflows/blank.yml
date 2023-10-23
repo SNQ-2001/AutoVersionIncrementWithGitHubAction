@@ -68,7 +68,7 @@ jobs:
           if [[ $PR_TITLE =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             # バージョン番号をドットで分割
             IFS='.' read -ra pr_version_parts <<< "$PR_TITLE"
-            IFS='.' read -ra proj_version_parts <<< "$PR_TITLE"
+            IFS='.' read -ra proj_version_parts <<< "$MARKETING_VERSION"
 
             # バージョンの各コンポーネントを整数に変換
             pr_major_version=${pr_version_parts[0]}
