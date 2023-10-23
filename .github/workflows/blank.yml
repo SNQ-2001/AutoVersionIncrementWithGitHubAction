@@ -33,7 +33,7 @@ jobs:
           if [[ $PR_LABELS == *"リリース"* ]]; then
             HAS_RELEASE_LABEL=true
           fi
-          echo $HAS_RELEASE_LABEL >> $GITHUB_OUTPUT
+          echo "has_release_label=$HAS_RELEASE_LABEL" >> $GITHUB_OUTPUT
 
       - name: PRのタイトルを取得
         id: pr_title
