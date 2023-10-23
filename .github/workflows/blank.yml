@@ -24,8 +24,19 @@ jobs:
     
       - name: リリースラベルが付いているか判定
         id: check_release_label
-        # if: steps.check_release_label.outputs.has_label == 'リリース'
-        run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
+        run: |
+          PR_LABELS=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" | \
+          jq -r '.[].name')
+          echo "PR Labels: $PR_LABELS"
+
+          if [[ $PR_LABELS == *"リリース"* ]]; then
+            echo "PR has 'リリース' label"
+            echo "::set-output name=has_release_label::true"
+          else
+            echo "PR does not have 'リリース' label"
+            echo "::set-output name=has_release_label::false"
+          fi
 
       - name: PRのタイトルを取得
         id: pr_title
