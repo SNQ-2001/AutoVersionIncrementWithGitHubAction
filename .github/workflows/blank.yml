@@ -49,8 +49,8 @@ jobs:
         id: version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          MARKETING_VERSION=$(cat project.pbxproj | grep MARKETING_VERSION | awk -F= '{print $2}')
-          echo "marketing_version=$MARKETING_VERSION" >> $GITHUB_ENV
+          MARKETING_VERSION=$(cat ../../AutoVersionIncrementWithGitHubAction.xcodeproj/project.pbxproj | grep MARKETING_VERSION | awk -F= '{print $2}')
+          echo "marketing_version=$MARKETING_VERSION" >> $GITHUB_OUTPUT
 
       - name: 出力用
         run: |
