@@ -34,7 +34,7 @@ jobs:
           fi
           echo $HAS_RELEASE_LABEL
         env: # ここで他のステップに共有できるようになるかも？
-          HAS_RELEASE_LABEL: ${{ steps.check_label.outputs.HAS_RELEASE_LABEL }}
+          HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
 
       - name: PRのタイトルを取得
         id: pr_title
