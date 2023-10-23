@@ -28,7 +28,7 @@ jobs:
           PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
-          echo "PR Title: $PR_TITLE"
+          echo $PR_TITLE
     
       # - name: Check if the "リリース" ラベルが付いている
       #   id: check_label
