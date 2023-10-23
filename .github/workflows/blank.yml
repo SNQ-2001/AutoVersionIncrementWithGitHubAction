@@ -46,7 +46,7 @@ jobs:
 
       - name: 出力用
         run: |
-          echo ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
+          echo ${{ steps.check_release_label.outputs.has_release_label }}
           echo ${{ steps.pr_title.outputs.PR_TITLE }}
 
     # env: # ここで他のステップに共有できるようになるかも？
