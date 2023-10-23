@@ -24,7 +24,7 @@ jobs:
     
       - name: リリースラベルが付いているか判定
         id: check_release_label
-        if: github.event_name == 'pull_request' || steps.check_release_label.outputs.has_label == 'リリース'
+        # if: steps.check_release_label.outputs.has_label == 'リリース'
         run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
 
       - name: PRのタイトルを取得
@@ -35,6 +35,8 @@ jobs:
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
           echo $PR_TITLE
+        env: # ここで他のステップに共有できるようになるかも？
+          PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
 
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
