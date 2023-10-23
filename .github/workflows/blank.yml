@@ -21,7 +21,7 @@ jobs:
       PROJ_NAME: AutoVersionIncrementWithGitHubAction
 
     steps:
-      - name: リポジトリの内容を取得？
+      - name: リポジトリの内容を取得
         uses: actions/checkout@v2
     
       - name: リリースラベルが付いているか判定
