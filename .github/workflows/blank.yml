@@ -55,6 +55,35 @@ jobs:
           MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.APP_NAME }}.xcodeproj/project.pbxproj)
           echo "marketing_version=$MARKETING_VERSION" >> $GITHUB_OUTPUT
 
+      - name: PRタイトルのバージョンとMARKETING_VERSIONを比較
+        id: comparison
+        if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
+        run: |
+          # バージョン番号がセマンティックバージョニング形式かどうかを確認
+          if [[ $PR_TITLE =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            # バージョン番号を数値に変換して比較
+            PR_VERSION=(${PR_TITLE//./ })
+            MARKETING_VERSION=(${MARKETING_VERSION//./ })
+
+            # メジャーバージョン、マイナーバージョン、パッチバージョンを比較
+            if [ ${PR_VERSION[0]} -gt ${MARKETING_VERSION[0]} ] ||
+               ([ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
+                [ ${PR_VERSION[1]} -gt ${MARKETING_VERSION[1]} ]) ||
+               ([ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
+                [ ${PR_VERSION[1]} -eq ${MARKETING_VERSION[1]} ] &&
+                [ ${PR_VERSION[2]} -gt ${MARKETING_VERSION[2]} ]); then
+              echo "PR_TITLE は MARKETING_VERSION よりも大きいバージョンです"
+            elif [ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
+                 [ ${PR_VERSION[1]} -eq ${MARKETING_VERSION[1]} ] &&
+                 [ ${PR_VERSION[2]} -eq ${MARKETING_VERSION[2} ]; then
+              echo "PR_TITLE は MARKETING_VERSION と同じバージョンです"
+            else
+              echo "PR_TITLE は MARKETING_VERSION よりも小さいバージョンです"
+            fi
+          else
+            echo "バージョン番号がセマンティックバージョニング形式ではありません"
+          fi
+
       - name: 出力用
         run: |
           echo ${{ steps.check_release_label.outputs.has_release_label }}
