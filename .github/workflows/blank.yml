@@ -28,24 +28,17 @@ jobs:
           PR_LABELS=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" | \
           jq -r '.[].name')
-          echo "PR Labels: $PR_LABELS"
-
+          HAS_RELEASE_LABEL=false
           if [[ $PR_LABELS == *"リリース"* ]]; then
-            echo "PR has 'リリース' label"
-            echo "::set-output name=has_release_label::true"
             HAS_RELEASE_LABEL=true
-          else
-            echo "PR does not have 'リリース' label"
-            echo "::set-output name=has_release_label::false"
-            HAS_RELEASE_LABEL=false
           fi
-          echo "出力: $HAS_RELEASE_LABEL"
-        env:
+          echo $HAS_RELEASE_LABEL
+        env: # ここで他のステップに共有できるようになるかも？
           HAS_RELEASE_LABEL: ${{ steps.check_label.outputs.HAS_RELEASE_LABEL }}
 
       - name: PRのタイトルを取得
         id: pr_title
-        if: steps.check_label.outputs.has_label == 'リリース'
+        if: steps.check_release_label.outputs.HAS_RELEASE_LABEL
         run: |
           PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
