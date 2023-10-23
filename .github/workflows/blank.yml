@@ -25,9 +25,7 @@ jobs:
       - name: PRのタイトルを取得
         id: pr_title
         run: |
-          echo "出力: $(https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }})"
-        env:
-          PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
+          echo "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq -r '.title'"
     
       # - name: Check if the "リリース" ラベルが付いている
       #   id: check_label
