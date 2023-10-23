@@ -91,8 +91,8 @@ jobs:
 
       - name: 出力用
         run: |
-          echo ${{ steps.check_release_label.outputs.has_release_label }}
-          echo ${{ steps.pr_title_version.outputs.pr_title_version }}
-          echo ${{ steps.proj_marketing_version.outputs.marketing_version }}
-          echo ${{ env.APP_NAME }}
-          echo ${{ steps.version_comparison.outputs.has_app_update }}
+          echo "アプリ名: ${{ env.APP_NAME }}"
+          echo "リリースラベル: ${{ steps.check_release_label.outputs.has_release_label }}"
+          echo "PRタイトルバージョン: ${{ steps.pr_title_version.outputs.pr_title_version }}"
+          echo "現在のバージョン: ${{ steps.proj_marketing_version.outputs.marketing_version }}"
+          echo "アップデート: ${{ steps.version_comparison.outputs.has_app_update }}"
