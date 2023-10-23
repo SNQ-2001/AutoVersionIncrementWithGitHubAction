@@ -66,24 +66,7 @@ jobs:
           echo $MARKETING_VERSION
 
           if [[ $PR_TITLE =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            # バージョン番号を数値に変換して比較
-            PR_VERSION=(${PR_TITLE//./ })
-            MARKETING_VERSION=(${MARKETING_VERSION//./ })
-
-            if [ ${PR_VERSION[0]} -gt ${MARKETING_VERSION[0]} ] ||
-               ([ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
-                [ ${PR_VERSION[1]} -gt ${MARKETING_VERSION[1]} ]) ||
-               ([ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
-                [ ${PR_VERSION[1]} -eq ${MARKETING_VERSION[1]} ] &&
-                [ ${PR_VERSION[2]} -gt ${MARKETING_VERSION[2]} ]); then
-              echo "PR_TITLE は MARKETING_VERSION よりも大きいバージョンです"
-            elif [ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
-                 [ ${PR_VERSION[1]} -eq ${MARKETING_VERSION[1]} ] &&
-                 [ ${PR_VERSION[2]} -eq ${MARKETING_VERSION[2} ]; then
-              echo "PR_TITLE は MARKETING_VERSION と同じバージョンです"
-            else
-              echo "PR_TITLE は MARKETING_VERSION よりも小さいバージョンです"
-            fi
+            echo "バージョン番号がセマンティックバージョニング形式です"
           else
             echo "バージョン番号がセマンティックバージョニング形式ではありません"
           fi
