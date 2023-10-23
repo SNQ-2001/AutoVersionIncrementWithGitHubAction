@@ -49,7 +49,7 @@ jobs:
         id: version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' {プロジェクト名}.xcodeproj/project.pbxproj)
+          MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' AutoVersionIncrementWithGitHubAction.xcodeproj/project.pbxproj)
           echo "marketing_version=$MARKETING_VERSION" >> $GITHUB_OUTPUT
 
       - name: 出力用
