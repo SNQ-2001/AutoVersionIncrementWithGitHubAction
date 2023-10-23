@@ -50,6 +50,7 @@ jobs:
         id: proj_marketing_version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
+          cat ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
           PROJ_MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj)
           echo "proj_marketing_version=$PROJ_MARKETING_VERSION" >> $GITHUB_OUTPUT
 
