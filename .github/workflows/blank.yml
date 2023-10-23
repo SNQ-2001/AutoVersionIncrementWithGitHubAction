@@ -25,8 +25,10 @@ jobs:
       - name: PRのタイトルを取得
         id: pr_title
         run: |
-          PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | jq -r '.title')
-          echo "PR Title: $PR_TITLE"
+          PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
+          jq -r '.title')
+          echo PR_TITLE
     
       # - name: Check if the "リリース" ラベルが付いている
       #   id: check_label
