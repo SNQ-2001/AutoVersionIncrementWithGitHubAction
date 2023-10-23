@@ -59,12 +59,15 @@ jobs:
         id: comparison
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          # バージョン番号がセマンティックバージョニング形式かどうかを確認
+          PR_TITLE=$(echo ${{ steps.pr_title.outputs.pr_title }})
+          MARKETING_VERSION=$(echo ${{ steps.version.outputs.marketing_version }})
+          
+          # 正確なセマンティックバージョニング形式の検証
           if [[ $PR_TITLE =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             # バージョン番号を数値に変換して比較
             PR_VERSION=(${PR_TITLE//./ })
             MARKETING_VERSION=(${MARKETING_VERSION//./ })
-
+          
             # メジャーバージョン、マイナーバージョン、パッチバージョンを比較
             if [ ${PR_VERSION[0]} -gt ${MARKETING_VERSION[0]} ] ||
                ([ ${PR_VERSION[0]} -eq ${MARKETING_VERSION[0]} ] &&
