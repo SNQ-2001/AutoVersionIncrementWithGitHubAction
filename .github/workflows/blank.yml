@@ -19,6 +19,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      APP_NAME: AutoVersionIncrementWithGitHubAction
+
     steps:
       - name: リポジトリの内容を取得？
         uses: actions/checkout@v2
@@ -49,7 +52,7 @@ jobs:
         id: version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' AutoVersionIncrementWithGitHubAction.xcodeproj/project.pbxproj)
+          MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.APP_NAME }}.xcodeproj/project.pbxproj)
           echo "marketing_version=$MARKETING_VERSION" >> $GITHUB_OUTPUT
 
       - name: 出力用
@@ -57,3 +60,4 @@ jobs:
           echo ${{ steps.check_release_label.outputs.has_release_label }}
           echo ${{ steps.pr_title.outputs.pr_title }}
           echo ${{ steps.version.outputs.marketing_version }}
+          echo ${{ env.APP_NAME }}
