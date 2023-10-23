@@ -24,7 +24,7 @@ jobs:
     
       - name: リリースラベルが付いているか判定
         id: check_release_label
-        if: github.event_name == 'pull_request' && steps.check_release_label.outputs.has_label == 'リリース'
+        if: github.event_name == 'pull_request' || steps.check_release_label.outputs.has_label == 'リリース'
         run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
 
       - name: PRのタイトルを取得
