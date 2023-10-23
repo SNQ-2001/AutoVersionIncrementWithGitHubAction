@@ -57,43 +57,75 @@ jobs:
         id: version_comparison
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
-          PR_TITLE_VERSION=$(echo ${{ steps.pr_title_version.outputs.pr_title_version }})
-          PROJ_MARKETING_VERSION=$(echo ${{ steps.proj_marketing_version.outputs.proj_marketing_version }})
+          PR_TITLE_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
+          PROJ_MARKETING_VERSION="${{ steps.proj_marketing_version.outputs.proj_marketing_version }}"
 
-          if [[ $PR_TITLE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $PROJ_MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            IFS='.' read -ra pr_title_version_parts <<< "$PR_TITLE_VERSION"
-            IFS='.' read -ra proj_marketing_version_parts <<< "$PROJ_MARKETING_VERSION"
-
-            # pr_title_version
-            pr_title_major_version=${pr_title_version_parts[0]}
-            pr_title_minor_version=${pr_title_version_parts[1]}
-            pr_title_patch_version=${pr_title_version_parts[2]}
-
-            # proj_marketing_version
-            proj_marketing_major_version=${proj_marketing_version_parts[0]}
-            proj_marketing_minor_version=${proj_marketing_version_parts[1]}
-            proj_marketing_patch_version=${proj_marketing_version_parts[2]}
-
-            if [ $pr_title_major_version -gt $proj_marketing_major_version ] ||
-               ([ $pr_title_major_version -eq $proj_marketing_major_version ] &&
-                [ $pr_title_minor_version -gt $proj_marketing_minor_version ]) ||
-               ([ $pr_title_major_version -eq $proj_marketing_major_version ] &&
-                [ $pr_title_minor_version -eq $proj_marketing_minor_version ] &&
-                [ $pr_title_patch_version -gt $proj_marketing_patch_version ]); then
-              echo "PR_TITLE_VERSION は MARKETING_VERSION よりも大きいバージョンです"
-            elif [ $pr_title_major_version -eq $proj_marketing_major_version ] &&
-                 [ $pr_title_minor_version -eq $proj_marketing_minor_version ] &&
-                 [ $pr_title_patch_version -eq $proj_marketing_patch_version ]; then
-              echo "PR_TITLE_VERSION は MARKETING_VERSION と同じバージョンです"
-            else
-              echo "PR_TITLE_VERSION は MARKETING_VERSION よりも小さいバージョンです"
-              exit 1
-            fi
-            
-          else
+          if ! [[ $PR_TITLE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $PROJ_MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "バージョン番号がセマンティックバージョニング形式ではありません"
             exit 1
           fi
+
+          IFS='.' read -ra pr_title_version_parts <<< "$PR_TITLE_VERSION"
+          IFS='.' read -ra proj_marketing_version_parts <<< "$PROJ_MARKETING_VERSION"
+
+          pr_title_major_version=${pr_title_version_parts[0]}
+          pr_title_minor_version=${pr_title_version_parts[1]}
+          pr_title_patch_version=${pr_title_version_parts[2]}
+
+          proj_marketing_major_version=${proj_marketing_version_parts[0]}
+          proj_marketing_minor_version=${proj_marketing_version_parts[1]}
+          proj_marketing_patch_version=${proj_marketing_version_parts[2]}
+
+          if ((pr_title_major_version > proj_marketing_major_version)) ||
+             ((pr_title_major_version == proj_marketing_major_version && pr_title_minor_version > proj_marketing_minor_version)) ||
+             ((pr_title_major_version == proj_marketing_major_version && pr_title_minor_version == proj_marketing_minor_version && pr_title_patch_version > proj_marketing_patch_version)); then
+            echo "PR_TITLE_VERSION は MARKETING_VERSION よりも大きいバージョンです"
+          elif ((pr_title_major_version == proj_marketing_major_version && pr_title_minor_version == proj_marketing_minor_version && pr_title_patch_version == proj_marketing_patch_version)); then
+            echo "PR_TITLE_VERSION は MARKETING_VERSION と同じバージョンです"
+          else
+            echo "PR_TITLE_VERSION は MARKETING_VERSION よりも小さいバージョンです"
+            exit 1
+          fi
+
+
+        
+          # PR_TITLE_VERSION=$(echo ${{ steps.pr_title_version.outputs.pr_title_version }})
+          # PROJ_MARKETING_VERSION=$(echo ${{ steps.proj_marketing_version.outputs.proj_marketing_version }})
+
+          # if [[ $PR_TITLE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $PROJ_MARKETING_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          #   IFS='.' read -ra pr_title_version_parts <<< "$PR_TITLE_VERSION"
+          #   IFS='.' read -ra proj_marketing_version_parts <<< "$PROJ_MARKETING_VERSION"
+
+          #   # pr_title_version
+          #   pr_title_major_version=${pr_title_version_parts[0]}
+          #   pr_title_minor_version=${pr_title_version_parts[1]}
+          #   pr_title_patch_version=${pr_title_version_parts[2]}
+
+          #   # proj_marketing_version
+          #   proj_marketing_major_version=${proj_marketing_version_parts[0]}
+          #   proj_marketing_minor_version=${proj_marketing_version_parts[1]}
+          #   proj_marketing_patch_version=${proj_marketing_version_parts[2]}
+
+          #   if [ $pr_title_major_version -gt $proj_marketing_major_version ] ||
+          #      ([ $pr_title_major_version -eq $proj_marketing_major_version ] &&
+          #       [ $pr_title_minor_version -gt $proj_marketing_minor_version ]) ||
+          #      ([ $pr_title_major_version -eq $proj_marketing_major_version ] &&
+          #       [ $pr_title_minor_version -eq $proj_marketing_minor_version ] &&
+          #       [ $pr_title_patch_version -gt $proj_marketing_patch_version ]); then
+          #     echo "PR_TITLE_VERSION は MARKETING_VERSION よりも大きいバージョンです"
+          #   elif [ $pr_title_major_version -eq $proj_marketing_major_version ] &&
+          #        [ $pr_title_minor_version -eq $proj_marketing_minor_version ] &&
+          #        [ $pr_title_patch_version -eq $proj_marketing_patch_version ]; then
+          #     echo "PR_TITLE_VERSION は MARKETING_VERSION と同じバージョンです"
+          #   else
+          #     echo "PR_TITLE_VERSION は MARKETING_VERSION よりも小さいバージョンです"
+          #     exit 1
+          #   fi
+            
+          # else
+          #   echo "バージョン番号がセマンティックバージョニング形式ではありません"
+          #   exit 1
+          # fi
 
       - name: 出力用
         run: |
