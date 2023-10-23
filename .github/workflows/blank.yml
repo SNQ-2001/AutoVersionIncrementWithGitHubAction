@@ -87,6 +87,21 @@ jobs:
             echo "Proj Major Version: $proj_major_version"
             echo "Proj Minor Version: $proj_minor_version"
             echo "Proj Patch Version: $proj_patch_version"
+
+            if [ $pr_major_version -gt $proj_major_version ] ||
+               ([ $pr_major_version -eq $proj_major_version ] &&
+                [ $pr_minor_version -gt $proj_minor_version ]) ||
+               ([ $pr_major_version -eq $proj_major_version ] &&
+                [ $pr_minor_version -eq $proj_minor_version ] &&
+                [ $pr_patch_version -gt $proj_patch_version ]); then
+              echo "PR_TITLE は MARKETING_VERSION よりも大きいバージョンです"
+            elif [ $pr_major_version -eq $proj_major_version ] &&
+                 [ $pr_minor_version -eq $proj_minor_version ] &&
+                 [ $pr_patch_version -eq $proj_patch_version ]; then
+              echo "PR_TITLE は MARKETING_VERSION と同じバージョンです"
+            else
+              echo "PR_TITLE は MARKETING_VERSION よりも小さいバージョンです"
+            fi
             
           else
             echo "バージョン番号がセマンティックバージョニング形式ではありません"
