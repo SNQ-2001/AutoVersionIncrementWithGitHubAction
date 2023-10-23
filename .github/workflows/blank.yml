@@ -1,0 +1,43 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Increment Version
+
+# 実行されるタイミング
+on:
+  # `main`にPRが作成された or PRにラベルが付けられた
+  pull_request:
+    branches: 
+      - "main"
+    types:
+      - labeled
+
+  # 手動
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  increment_version:
+    name: Increment Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if the "リリース" ラベルが付いている
+        id: check_label
+        run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
+        if: github.event_name == 'pull_request' && steps.check_label.outputs.has_label == 'リリース'
+
+      - name: Checkout リポジトリ
+        uses: actions/checkout@v2
+
+      - name: インクリメントバージョン
+        if: steps.check_label.outputs.has_label == 'リリース'
+        run: |
+          # バージョンをインクリメントするスクリプトをここに書く
+          # 例: version=$(cat VERSION)
+          # 新しいバージョンを計算して、ファイルに書き込む
+          # 例: echo $new_version > VERSION
+          # git コミットとプッシュ
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git commit -m "Increment version to $new_version"
+          git push
