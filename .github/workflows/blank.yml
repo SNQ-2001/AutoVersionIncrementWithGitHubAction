@@ -19,6 +19,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env: # ここで他のステップに共有できるようになるかも？
+      HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
+      PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
+
     steps:
       - name: リポジトリの内容を取得？
         uses: actions/checkout@v2
@@ -34,8 +38,6 @@ jobs:
             HAS_RELEASE_LABEL=true
           fi
           echo $HAS_RELEASE_LABEL
-        env: # ここで他のステップに共有できるようになるかも？
-          HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
 
       - name: PRのタイトルを取得
         id: pr_title
@@ -45,12 +47,11 @@ jobs:
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
           echo $PR_TITLE
-        env: # ここで他のステップに共有できるようになるかも？
-          PR_TITLE: ${{ steps.pr_title.outputs.PR_TITLE }}
 
       - name: 出力用
         run: |
-          echo ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
+          echo $HAS_RELEASE_LABEL
+          echo $PR_TITLE
 
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
