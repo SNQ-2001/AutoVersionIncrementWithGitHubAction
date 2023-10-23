@@ -21,19 +21,20 @@ jobs:
     steps:
       - name: リポジトリの内容を取得？
         uses: actions/checkout@v2
+    
+      - name: リリースラベルが付いているか判定
+        id: check_release_label
+        if: github.event_name == 'pull_request' && steps.check_release_label.outputs.has_label == 'リリース'
+        run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
 
       - name: PRのタイトルを取得
         id: pr_title
+        if: steps.check_label.outputs.has_label == 'リリース'
         run: |
           PR_TITLE=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
           echo $PR_TITLE
-    
-      - name: リリースラベルが付いているか判定
-        id: check_release_label
-        run: echo ::set-output name=has_label::$(echo ${{ github.event.label.name }} | grep 'リリース' || true)
-        if: github.event_name == 'pull_request' && steps.check_release_label.outputs.has_label == 'リリース'
 
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
