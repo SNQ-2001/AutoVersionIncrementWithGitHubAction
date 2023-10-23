@@ -48,6 +48,10 @@ jobs:
         env: # ここで他のステップに共有できるようになるかも？
           HAS_RELEASE_LABEL: ${{ steps.check_release_label.outputs.HAS_RELEASE_LABEL }}
 
+      - name: PRのタイトルを取得
+        run: |
+          echo $steps.check_release_label.outputs.HAS_RELEASE_LABEL
+
       # - name: Checkout リポジトリ
       #   uses: actions/checkout@v2
 
