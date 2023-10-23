@@ -39,6 +39,7 @@ jobs:
             echo "::set-output name=has_release_label::false"
             HAS_RELEASE_LABEL=false
           fi
+          echo "出力: $HAS_RELEASE_LABEL"
         env:
           HAS_RELEASE_LABEL: ${{ steps.check_label.outputs.HAS_RELEASE_LABEL }}
 
