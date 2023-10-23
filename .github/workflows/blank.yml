@@ -92,11 +92,12 @@ jobs:
       - name: バージョンアップ
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }} && ${{ steps.version_comparison.outputs.has_app_update == 'true' }}
         run: |
-          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = ${{ steps.pr_title_version.outputs.pr_title_version }}/" ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
-          # コミット
-          git add ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
-          git commit -m "update: version to ${{ steps.pr_title_version.outputs.pr_title_version }}"
-          git push
+          NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
+          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
+
+          # git add ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
+          # git commit -m "update: version to ${{ steps.pr_title_version.outputs.pr_title_version }}"
+          # git push
 
       - name: デバッグ用
         run: |
