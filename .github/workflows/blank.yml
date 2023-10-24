@@ -99,12 +99,12 @@ jobs:
           sed -i -n -e "s/MARKETING_VERSION = .*/MARKETING_VERSION = $VERSION;/" $PBXPROJ_PATH
           echo "実行後: $(sed -n -e /MARKETING_VERSION/p $PBXPROJ_PATH)"
 
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git config user.email 
-          git add $PBXPROJ_PATH
-          git commit -m "update: $NEW_VERSION"
-          git push
+          # git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # git config --global user.name "github-actions[bot]"
+          # git config user.email 
+          # git add $PBXPROJ_PATH
+          # git commit -m "update: $NEW_VERSION"
+          # git push
 
       - name: デバッグ用
         run: |
@@ -113,3 +113,5 @@ jobs:
           echo "PRタイトルバージョン: ${{ steps.pr_title_version.outputs.pr_title_version }}"
           echo "現在のバージョン: ${{ steps.proj_marketing_version.outputs.proj_marketing_version }}"
           echo "アップデート: ${{ steps.version_comparison.outputs.has_app_update }}"
+          echo "現在ブランチ: $GITHUB_REF"
+          echo "ベースブランチ: $GITHUB_BASE_REF"
