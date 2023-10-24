@@ -99,6 +99,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git fetch
           git checkout develop
+          git pull origin develop
           git add $PBXPROJ_PATH
           git commit -m "update: $NEW_VERSION"
           git push origin develop
