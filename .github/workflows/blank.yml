@@ -95,7 +95,8 @@ jobs:
           PBXPROJ_PATH="${{ env.PROJ_NAME }}".xcodeproj/project.pbxproj
           NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
           echo $PBXPROJ_PATH
-          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" $PBXPROJ_PATH
+          # sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" $PBXPROJ_PATH
+          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = 1.0.2;/" AutoVersionIncrementWithGitHubAction.xcodeproj/project.pbxproj
 
           # git add ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
           # git commit -m "update: version to ${{ steps.pr_title_version.outputs.pr_title_version }}"
