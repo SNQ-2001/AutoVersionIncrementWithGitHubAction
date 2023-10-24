@@ -95,9 +95,8 @@ jobs:
           PBXPROJ_PATH="${{ env.PROJ_NAME }}".xcodeproj/project.pbxproj
           NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
           echo $PBXPROJ_PATH
-          # sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" $PBXPROJ_PATH
-          # echo $(sed -n -e /MARKETING_VERSION/p $PBXPROJ_PATH)
-          echo $(sed -i -n -e s/MARKETING_VERSION = .*/MARKETING_VERSION = $VERSION;/ $PBXPROJ_PATH)
+          sed -i -n -e s/MARKETING_VERSION = .*/MARKETING_VERSION = $VERSION;/ $PBXPROJ_PATH
+          echo $(sed -n -e /MARKETING_VERSION/p $PBXPROJ_PATH)
 
 
           # git add ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
