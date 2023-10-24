@@ -1,8 +1,6 @@
-name: Increment Version
+name: バージョン管理
 
-# 実行されるタイミング
 on:
-  # `main`にPRが作成された or PRにラベルが付けられた
   pull_request:
     branches: 
       - main
@@ -10,10 +8,9 @@ on:
       - opened
       - labeled
 
-# 実行内容
 jobs:
-  increment_version:
-    name: バージョン変更
+  version_manage:
+    name: 実行
 
     runs-on: ubuntu-latest
 
@@ -24,7 +21,7 @@ jobs:
       - name: リポジトリの内容を取得
         uses: actions/checkout@v2
     
-      - name: リリースラベルが付いているか判定
+      - name: リリースラベルの有無
         id: check_release_label
         run: |
           PR_LABELS=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
@@ -46,14 +43,14 @@ jobs:
           echo 
           echo "pr_title_version=$PR_TITLE_VERSION" >> $GITHUB_OUTPUT
 
-      - name: project.pbxprojからMARKETING_VERSIONを取得
+      - name: アプリバージョンを取得
         id: proj_marketing_version
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
           PROJ_MARKETING_VERSION=$(sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj)
           echo "proj_marketing_version=$PROJ_MARKETING_VERSION" >> $GITHUB_OUTPUT
 
-      - name: PRタイトルのバージョンとMARKETING_VERSIONを比較
+      - name: PRタイトルのバージョンとアプリバージョンを比較
         id: version_comparison
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }}
         run: |
@@ -89,7 +86,7 @@ jobs:
             exit 1
           fi
 
-      - name: バージョンアップ
+      - name: バージョンの更新
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' && steps.version_comparison.outputs.has_app_update == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -105,13 +102,3 @@ jobs:
           git add $PBXPROJ_PATH
           git commit -m "update: $NEW_VERSION"
           git push origin develop
-
-      - name: デバッグ用
-        run: |
-          echo "プロジェクト名: ${{ env.PROJ_NAME }}"
-          echo "リリースラベル: ${{ steps.check_release_label.outputs.has_release_label }}"
-          echo "PRタイトルバージョン: ${{ steps.pr_title_version.outputs.pr_title_version }}"
-          echo "現在のバージョン: ${{ steps.proj_marketing_version.outputs.proj_marketing_version }}"
-          echo "アップデート: ${{ steps.version_comparison.outputs.has_app_update }}"
-          echo "現在ブランチ: $GITHUB_REF"
-          echo "ベースブランチ: $GITHUB_BASE_REF"
