@@ -99,6 +99,11 @@ jobs:
           sed -i -n -e "s/MARKETING_VERSION = .*/MARKETING_VERSION = $VERSION;/" $PBXPROJ_PATH
           echo "実行後: $(sed -n -e /MARKETING_VERSION/p $PBXPROJ_PATH)"
 
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $PBXPROJ_PATH
+          git commit -m "update: $NEW_VERSION"
+          git push
+
       - name: デバッグ用
         run: |
           echo "プロジェクト名: ${{ env.PROJ_NAME }}"
