@@ -1,8 +1,6 @@
 name: Version Manager
 
-# 実行されるタイミング
 on:
-  # `main`にPRが作成された or PRにラベルが付けられた
   pull_request:
     branches: 
       - main
@@ -10,7 +8,6 @@ on:
       - opened
       - labeled
 
-# 実行内容
 jobs:
   version_manage:
     name: バージョンマネージャー
