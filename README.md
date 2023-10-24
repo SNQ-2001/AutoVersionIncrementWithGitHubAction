@@ -3,7 +3,7 @@
 ### 一発でリリースPRを作成する
 以下のURLを押す
 
-https://github.com/SNQ-2001/AutoVersionIncrementWithGitHubAction/compare/develop...main?quick_pull=1
+https://github.com/SNQ-2001/AutoVersionIncrementWithGitHubAction/compare/develop...main?quick_pull=1&labels=%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9
 
 ### アプリのバージョン取得
 https://qiita.com/hirothings/items/8b417b2efe2e1c1bc0ac
