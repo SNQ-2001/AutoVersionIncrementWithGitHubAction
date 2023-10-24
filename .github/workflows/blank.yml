@@ -90,7 +90,8 @@ jobs:
           fi
 
       - name: バージョンアップ
-        if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }} && ${{ steps.version_comparison.outputs.has_app_update == 'true' }}
+        # if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }} && ${{ steps.version_comparison.outputs.has_app_update == 'true' }}
+        if: ${{ steps.check_release_label.outputs.has_release_label == 'true' && steps.version_comparison.outputs.has_app_update == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
