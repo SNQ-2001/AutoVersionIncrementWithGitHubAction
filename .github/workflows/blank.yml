@@ -99,11 +99,15 @@ jobs:
           sed -i -n -e "s/MARKETING_VERSION = .*/MARKETING_VERSION = $VERSION;/" $PBXPROJ_PATH
           echo "実行後: $(sed -n -e /MARKETING_VERSION/p $PBXPROJ_PATH)"
 
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add $PBXPROJ_PATH
-          git commit -m "update: $NEW_VERSION"
-          git push origin develop
+          git status
+
+          git diff $PBXPROJ_PATH
+
+          # git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # git config --global user.name "github-actions[bot]"
+          # git add $PBXPROJ_PATH
+          # git commit -m "update: $NEW_VERSION"
+          # git push origin develop
 
       - name: デバッグ用
         run: |
