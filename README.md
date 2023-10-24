@@ -20,5 +20,21 @@ Read and writeに変更
 
 https://zenn.dev/osawa_koki/articles/a63b96a2707a8f
 
+Organizationアカウントだと上の設定ができない
+https://github.com/orgs/community/discussions/57244
+
+個別に設定する方がいいらしい
+https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idpermissions
+
+
+こんな感じ
+```yml
+permissions:
+  actions: write
+  checks: write
+  contents: write
+```
+
 ### クエリ パラメーターを使って pull request を作成する
 https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/using-query-parameters-to-create-a-pull-request
