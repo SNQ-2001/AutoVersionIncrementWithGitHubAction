@@ -19,3 +19,6 @@ Read and writeに変更
 <img width="844" alt="スクリーンショット 2023-10-24 16 36 39" src="https://github.com/SNQ-2001/AutoVersionIncrementWithGitHubAction/assets/84154073/731cef65-16cf-4124-bc24-4ac35be9e672">
 
 https://zenn.dev/osawa_koki/articles/a63b96a2707a8f
+
+### クエリ パラメーターを使って pull request を作成する
+https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/using-query-parameters-to-create-a-pull-request
