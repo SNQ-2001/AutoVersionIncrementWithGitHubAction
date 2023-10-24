@@ -91,6 +91,8 @@ jobs:
 
       - name: バージョンアップ
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }} && ${{ steps.version_comparison.outputs.has_app_update == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PBXPROJ_PATH="${{ env.PROJ_NAME }}".xcodeproj/project.pbxproj
           NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
