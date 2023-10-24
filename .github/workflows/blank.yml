@@ -98,8 +98,8 @@ jobs:
           NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
           sed -i "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" $PBXPROJ_PATH
           git diff $PBXPROJ_PATH
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git fetch
           git checkout develop
           git add $PBXPROJ_PATH
