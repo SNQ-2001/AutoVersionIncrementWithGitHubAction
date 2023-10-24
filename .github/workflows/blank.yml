@@ -93,8 +93,9 @@ jobs:
         if: ${{ steps.check_release_label.outputs.has_release_label == 'true' }} && ${{ steps.version_comparison.outputs.has_app_update == 'true' }}
         run: |
           PROJ_NAME="${{ env.PROJ_NAME }}"
-          NEW_VERSION="${{ steps.pr_title_version.outputs.pr_title_version }}"
-          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" $PROJ_NAME.xcodeproj/project.pbxproj
+          PBXPROJ_PATH="${{ steps.pr_title_version.outputs.pr_title_version }}".xcodeproj/project.pbxproj
+          echo $PBXPROJ_PATH
+          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = $NEW_VERSION;/" $PBXPROJ_PATH
 
           # git add ${{ env.PROJ_NAME }}.xcodeproj/project.pbxproj
           # git commit -m "update: version to ${{ steps.pr_title_version.outputs.pr_title_version }}"
