@@ -40,7 +40,6 @@ jobs:
           PR_TITLE_VERSION=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | \
           jq -r '.title')
-          echo 
           echo "pr_title_version=$PR_TITLE_VERSION" >> $GITHUB_OUTPUT
 
       - name: アプリバージョンを取得
