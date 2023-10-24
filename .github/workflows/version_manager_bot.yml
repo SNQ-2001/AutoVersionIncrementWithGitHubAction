@@ -1,4 +1,4 @@
-name: Version Manager
+name: バージョン管理BOT
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   version_manage:
-    name: バージョンマネージャー
+    name: 実行
 
     runs-on: ubuntu-latest
 
