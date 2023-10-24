@@ -8,6 +8,9 @@ on:
       - opened
       - labeled
 
+permissions:
+  statuses: write
+
 jobs:
   version_manage:
     name: 実行
