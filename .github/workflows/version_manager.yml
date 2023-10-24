@@ -1,4 +1,4 @@
-name: バージョン管理BOT
+name: バージョン管理
 
 on:
   pull_request:
