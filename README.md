@@ -38,3 +38,14 @@ permissions:
 
 ### クエリ パラメーターを使って pull request を作成する
 https://docs.github.com/ja/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/using-query-parameters-to-create-a-pull-request
+
+# こんなエラーの時はブランチ保護付いてる
+以下の例ではdevelopブランチにpushしようとしていて、developブランチにブランチ保護が付いている。
+```
+remote: error: GH006: Protected branch update failed for refs/heads/develop.        
+remote: 
+remote: - 2 of 2 required status checks are expected.        
+To https://github.com/xxx/xxx
+ ! [remote rejected] develop -> develop (protected branch hook declined)
+error: failed to push some refs to 'https://github.com/xxx/xxx'
+```
